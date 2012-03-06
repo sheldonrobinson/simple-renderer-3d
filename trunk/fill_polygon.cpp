@@ -1,7 +1,7 @@
 #include <iostream>
+#include <limits>
 
 #include "common_types.h"
-
 #include "numeric_utils.tpp"
 
 namespace indoor_context {
