@@ -4,6 +4,8 @@
 ###############################################################################
 SET( EXAMPLES
 	foo
+	test_eigen
+	unittest
 	)
 
 FOREACH( EXAMPLE ${EXAMPLES} )

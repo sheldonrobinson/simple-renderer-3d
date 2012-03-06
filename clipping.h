@@ -5,7 +5,6 @@
 #include "numeric_utils.tpp"
 
 namespace indoor_context {
-
 	// Get the line through two points, in Plucker coordinates
 	Vec6 LineThrough(const Vec3& x, const Vec3& y);
 

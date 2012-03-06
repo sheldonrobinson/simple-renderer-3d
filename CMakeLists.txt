@@ -2,9 +2,9 @@ PROJECT( SimpleRenderer3D )
 CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
 
 # Setup the path to find modules to prefer local modules
-#SET( CMAKE_MODULE_PATH
-#	${CMAKE_SOURCE_DIR}/../cmake_modules
-#	)
+SET( CMAKE_MODULE_PATH 
+	${CMAKE_SOURCE_DIR}/cmake_modules
+	)
 
 # Set up system-level search paths
 LIST(APPEND CMAKE_LIBRARY_PATH
@@ -29,29 +29,39 @@ INCLUDE_DIRECTORIES( ${CMAKE_SOURCE_DIR} )
 ###############################################################################
 
 # Find libpng
-FIND_PACKAGE( PNG REQUIRED )
-INCLUDE_DIRECTORIES( ${PNG_INCLUDE_DIR} )
-LIST( APPEND EXTERNAL_LIBRARIES ${PNG_LIBRARIES} )
+#FIND_PACKAGE( PNG REQUIRED )
+#INCLUDE_DIRECTORIES( ${PNG_INCLUDE_DIR} )
+#LIST( APPEND EXTERNAL_LIBRARIES ${PNG_LIBRARIES} )
+
+# Find eigen
+FIND_PACKAGE( Eigen3 REQUIRED )
+INCLUDE_DIRECTORIES( ${EIGEN3_INCLUDE_DIR} )
+MESSAGE( "Eigen: " ${EIGEN3_INCLUDE_DIR} )
 
 # Find libjpeg
-FIND_PACKAGE( JPEG REQUIRED )
-INCLUDE_DIRECTORIES( ${JPEG_INCLUDE_DIR} )
-LIST( APPEND EXTERNAL_LIBRARIES ${JPEG_LIBRARIES} )
+#FIND_PACKAGE( JPEG REQUIRED )
+#INCLUDE_DIRECTORIES( ${JPEG_INCLUDE_DIR} )
+#LIST( APPEND EXTERNAL_LIBRARIES ${JPEG_LIBRARIES} )
+
+# Find libpng
+#FIND_PACKAGE( PNG REQUIRED )
+#INCLUDE_DIRECTORIES( ${PNG_INCLUDE_DIR} )
+#LIST( APPEND EXTERNAL_LIBRARIES ${PNG_LIBRARIES} )
 
 # Find Boost
-SET( Boost_FIND_QUIETLY OFF )
-FIND_PACKAGE( Boost 1.44.0
-	COMPONENTS date_time filesystem iostreams thread system program_options python
-	REQUIRED )
-LIST(APPEND EXTERNAL_LIBRARIES 
-	${Boost_system_LIBRARY_RELEASE}
-	${Boost_date_time_LIBRARY}
-	${Boost_filesystem_LIBRARY}
-	${Boost_iostreams_LIBRARY}
-	${Boost_thread_LIBRARY}
-	${Boost_program_options_LIBRARY}
-)
-ADD_DEFINITIONS( "-DBOOST_FILESYSTEM_VERSION=3" )
+#SET( Boost_FIND_QUIETLY OFF )
+#FIND_PACKAGE( Boost 1.44.0
+#	COMPONENTS date_time filesystem iostreams thread system program_options python
+#	REQUIRED )
+#LIST(APPEND EXTERNAL_LIBRARIES 
+#	${Boost_system_LIBRARY_RELEASE}
+#	${Boost_date_time_LIBRARY}
+#	${Boost_filesystem_LIBRARY}
+#	${Boost_iostreams_LIBRARY}
+#	${Boost_thread_LIBRARY}
+#	${Boost_program_options_LIBRARY}
+#)
+#ADD_DEFINITIONS( "-DBOOST_FILESYSTEM_VERSION=3" )
 
 # Find LAPACK
 # Note that FindLAPACK.cmake seems only to support Fortran
@@ -59,7 +69,7 @@ FIND_LIBRARY( LAPACK_LIBRARY liblapack.so )
 IF( NOT LAPACK_LIBRARY )
 	MESSAGE( FATAL_ERROR "Could not find LAPACK" )
 ENDIF()
-#INCLUDE_DIRECTORIES( ${LAPACK_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES( ${LAPACK_INCLUDE_DIR} )
 LIST( APPEND EXTERNAL_LIBRARIES ${LAPACK_LIBRARY} )
 
 # Find TooN
