@@ -1,41 +1,33 @@
-/*
- * simple_renderer.h
- *
- * A minimalist 3D renderer with depth buffering and clipping.
- *
- *  Created on: 6 Jul 2010
- *      Author: alexf
- */
-
 #pragma once
 
-#include "common_types.h"
+#include "matrix_types.h"
 
 namespace indoor_context {
 	class SimpleRenderer {
 	public:
+		// Make sure we're aligned (since we have eigen members)
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
 		// Initialize empty
 		SimpleRenderer();
 		// Initialize with the given camera
 		//SimpleRenderer(const PosedCamera& cam);
 		// Initialize with the given camera and viewport
-		SimpleRenderer(const toon::Matrix<3,4>& cam, Vec2I viewport);
+		SimpleRenderer(const LinearCamera& cam, Vec2I viewport);
 
 		// Get the frame buffer
-		const MatI& framebuffer() const { return framebuffer_; }
-		MatI& framebuffer() { return framebuffer_; }
+		const Eigen::ArrayXXi& framebuffer() const { return framebuffer_; }
+		Eigen::ArrayXXi& framebuffer() { return framebuffer_; }
 		// Get the depth buffer
-		const MatD& depthbuffer() const { return depthbuffer_; }
-		MatD& depthbuffer() { return depthbuffer_; }
+		const Eigen::ArrayXXd& depthbuffer() const { return depthbuffer_; }
+		Eigen::ArrayXXd& depthbuffer() { return depthbuffer_; }
 		// Get the camera
-		const toon::Matrix<3,4>& camera() const { return camera_; }
+		const LinearCamera& camera() const { return camera_; }
 		// Get the viewport
 		const Vec2I& viewport() const { return viewport_; }
 
 		// Configure the renderer with the given camera and viewport
-		//void Configure(const PosedCamera& cam);
-		// Configure the renderer with the given camera and viewport
-		void Configure(const toon::Matrix<3,4>& cam, Vec2I viewport);
+		void Configure(const LinearCamera& cam, Vec2I viewport);
 		// Clear all buffers
 		void Clear(int bg);
 
@@ -57,8 +49,8 @@ namespace indoor_context {
 		int SmoothInfiniteDepths();
 	private:
 		Vec2I viewport_;
-		toon::Matrix<3,4> camera_;
-		MatI framebuffer_;
-		MatD depthbuffer_;
+		LinearCamera camera_;
+		Eigen::ArrayXXi framebuffer_;
+		Eigen::ArrayXXd depthbuffer_;
 	};
 }  // namespace indoor_context

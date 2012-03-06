@@ -1,34 +1,33 @@
-#include <SVD.h>
+#include "depth_equation.h"
 
-#include "common_types.h"
+#include <Eigen/SVD>
 
+#include "matrix_types.h"
 #include "vector_utils.tpp"
 
 namespace indoor_context {
-	using namespace toon;
-
-	Vec3 PlaneToDepthEqn(const Matrix<3,4>& camera, const Vec4& plane) {
+	Vec3 PlaneToDepthEqn(const LinearCamera& camera, const Vec4& plane) {
 		Mat4 M;
-		M.slice<0, 0, 3, 4> () = camera;
-		M.slice<3, 0, 1, 4> () = plane.as_row();
-		SVD<4> decomp(M);
-		double du = 1. / (camera[2] * AtRetina(decomp.backsub(makeVector(1,0,1,0))));
-		double dv = 1. / (camera[2] * AtRetina(decomp.backsub(makeVector(0,1,1,0))));
-		double dw = 1. / (camera[2] * AtRetina(decomp.backsub(makeVector(0,0,1,0))));
-		return makeVector(du-dw, dv-dw, dw);
+		M.topRows<3>() = camera;
+		M.row(3) = plane;
+		Eigen::JacobiSVD<Mat4> svd(M, Eigen::ComputeFullU | Eigen::ComputeFullV);
+		double du = 1. / camera.row(2).dot(AtRetina(svd.solve(MakeVector<double>(1,0,1,0)).eval()));
+		double dv = 1. / camera.row(2).dot(AtRetina(svd.solve(MakeVector<double>(0,1,1,0)).eval()));
+		double dw = 1. / camera.row(2).dot(AtRetina(svd.solve(MakeVector<double>(0,0,1,0)).eval()));
+		return MakeVector(du-dw, dv-dw, dw);
 	}
 
 	double EvaluateDepthEqn(const Vec3& depth_eqn, const Vec2& p) {
-		return 1. / (depth_eqn*unproject(p));
+		return 1. / (depth_eqn.dot(Unproject(p)));
 	}
 
 	double GetPlaneDepth(const Vec3& p,
-											 const Matrix<3,4>& camera,
+											 const LinearCamera& camera,
 											 const Vec4& plane) {
 		Mat4 M;
-		M.slice<0, 0, 3, 4> () = camera;
-		M.slice<3, 0, 1, 4> () = plane.as_row();
-		SVD<4> decomp(M);
-		return camera[2] * AtRetina(decomp.backsub(Concatenate(p, 0.)));
+		M.topRows<3>() = camera;
+		M.bottomRows<1>() = plane;
+		return camera.row(2).dot( M.jacobiSvd(Eigen::ComputeFullU | Eigen::ComputeFullV)
+															 .solve(Concatenate(p, 0.)) );
 	}
 }

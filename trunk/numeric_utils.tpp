@@ -2,25 +2,25 @@
 
 #include <cmath>
 
-#include "common_types.h"
+#include "matrix_types.h"
 
 namespace indoor_context {
 	// Round and cast to integer
 	template <typename T>
 	inline int Roundi(const T x) {
-		return static_cast<int>(round(x));
+		return static_cast<int>(std::floor(x+.5));
 	}
 
 	// Ceil and cast to integer
 	template <typename T>
 	inline int Ceili(const T x) {
-		return static_cast<int>(ceil(x));
+		return static_cast<int>(std::ceil(x));
 	}
 
 	// Floor and cast to integer
 	template <typename T>
 	inline int Floori(const T x) {
-		return static_cast<int>(floor(x));
+		return static_cast<int>(std::floor(x));
 	}
 
 	// Clamp x to [min,max]
