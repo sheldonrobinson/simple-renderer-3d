@@ -28,12 +28,7 @@ INCLUDE_DIRECTORIES( ${CMAKE_SOURCE_DIR} )
 # FIND DEPENDENCIES
 ###############################################################################
 
-# Find libpng
-#FIND_PACKAGE( PNG REQUIRED )
-#INCLUDE_DIRECTORIES( ${PNG_INCLUDE_DIR} )
-#LIST( APPEND EXTERNAL_LIBRARIES ${PNG_LIBRARIES} )
-
-# Find eigen
+# Find Eigen
 FIND_PACKAGE( Eigen3 REQUIRED )
 INCLUDE_DIRECTORIES( ${EIGEN3_INCLUDE_DIR} )
 MESSAGE( "Eigen: " ${EIGEN3_INCLUDE_DIR} )
@@ -72,28 +67,27 @@ ENDIF()
 INCLUDE_DIRECTORIES( ${LAPACK_INCLUDE_DIR} )
 LIST( APPEND EXTERNAL_LIBRARIES ${LAPACK_LIBRARY} )
 
-# Find TooN
-FIND_PATH( TOON_INCLUDE_DIR TooN.h
-	/usr/include/TooN /usr/local/include/TooN)
-IF( NOT TOON_INCLUDE_DIR )
-	MESSAGE( FATAL_ERROR "Could not find TooN include directory." )
-ENDIF( NOT TOON_INCLUDE_DIR )
-INCLUDE_DIRECTORIES( ${TOON_INCLUDE_DIR} )
-
-# Find VW
-SET( VW_USE_LIBS VNL )
-FIND_PACKAGE( VW REQUIRED )
-INCLUDE_DIRECTORIES( ${VW_INCLUDE_DIR} )
-LIST( APPEND EXTERNAL_LIBRARIES ${VW_LIBRARY} )
-
 ###############################################################################
 # BUILD LIBRARY
 ###############################################################################
-ADD_LIBRARY( simplerenderer SHARED 
-	simple_renderer.cpp
+ADD_LIBRARY( simplerenderer
+	bounds.tpp
+
+	clipping.h
 	clipping.cpp
+
+	depth_equation.h
 	depth_equation.cpp
+
+	fill_polygon.h
 	fill_polygon.cpp
+
+	matrix_types.h
+	numeric_utils.tpp
+	vector_utils.tpp
+
+	simple_renderer.h
+	simple_renderer.cpp
 )
 
 TARGET_LINK_LIBRARIES( simplerenderer ${EXTERNAL_LIBRARIES} )
@@ -101,7 +95,6 @@ TARGET_LINK_LIBRARIES( simplerenderer ${EXTERNAL_LIBRARIES} )
 ###############################################################################
 # BUILD EXAMPLES
 ###############################################################################
-
 ADD_SUBDIRECTORY(examples)
 
 ###############################################################################
