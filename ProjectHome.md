@@ -1,0 +1,1 @@
+An extremely simple 3D renderer in plain C++, designed for computer vision applications in which the rendered scene is used for some computational end rather than viewed by a human.
